@@ -57,6 +57,10 @@
             </div>
             <div class="char-count" id="resume-count">0 words</div>
           </div>
+          <label class="file-upload-label">
+            <i class="fa-solid fa-upload"></i> Upload document
+            <input type="file" id="resume-file" accept=".txt,.pdf,.doc,.docx" class="file-upload-input" />
+          </label>
           <textarea
             id="resume-input"
             class="textarea"
@@ -76,6 +80,10 @@
             </div>
             <div class="char-count" id="jd-count">0 words</div>
           </div>
+          <label class="file-upload-label">
+            <i class="fa-solid fa-upload"></i> Upload document
+            <input type="file" id="jd-file" accept=".txt,.pdf,.doc,.docx" class="file-upload-input" />
+          </label>
           <textarea
             id="jd-input"
             class="textarea"
@@ -177,11 +185,13 @@
     </section>
 
     <footer class="footer">
-      <p>SkillGapAI © 2026 · Team Innovators </p>
+      <p>Built with <i class="fa-solid fa-heart" style="color:#f87171"></i> using AI · SkillGapAI &copy; 2026</p>
     </footer>
 
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
   <script src="script.js"></script>
 </body>
 </html>

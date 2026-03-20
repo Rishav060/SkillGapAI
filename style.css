@@ -499,7 +499,27 @@ body {
 }
 .footer i { margin: 0 1px; }
 
-/* ── Empty state ── */
+/* ── File Upload Button ── */
+.file-upload-label {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 12px; font-weight: 500;
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.04);
+  border: 1px dashed rgba(255,255,255,0.15);
+  padding: 7px 14px; border-radius: var(--radius-sm);
+  cursor: pointer; margin-bottom: 10px;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.file-upload-label:hover {
+  border-color: rgba(59,130,246,0.45);
+  color: var(--blue-light);
+  background: var(--blue-glow);
+}
+.file-upload-input {
+  display: none;
+}
+
+/* ── File Upload Button ── */
 .empty-state {
   text-align: center;
   color: var(--text-muted);

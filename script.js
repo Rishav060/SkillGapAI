@@ -292,6 +292,60 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
+// ─── File Upload Handlers ──────────────────────────────────────────────────
+function handleFileUpload(inputId, textareaId, countId) {
+  const fileInput = document.getElementById(inputId);
+  fileInput.addEventListener('change', function () {
+    const file = this.files[0];
+    if (!file) return;
+
+    const name = file.name.toLowerCase();
+
+    if (name.endsWith('.txt')) {
+      // ── Plain text ──────────────────────────────────────────────────────
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const textarea = document.getElementById(textareaId);
+        textarea.value = e.target.result;
+        document.getElementById(countId).textContent = countWords(e.target.result) + ' words';
+      };
+      reader.readAsText(file);
+
+    } else if (name.endsWith('.pdf')) {
+      // ── PDF via pdf.js ──────────────────────────────────────────────────
+      const reader = new FileReader();
+      reader.onload = async function (e) {
+        try {
+          const typedArray = new Uint8Array(e.target.result);
+          const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
+          let fullText = '';
+
+          for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+            const page = await pdf.getPage(pageNum);
+            const content = await page.getTextContent();
+            const pageText = content.items.map(item => item.str).join(' ');
+            fullText += pageText + '\n';
+          }
+
+          const textarea = document.getElementById(textareaId);
+          textarea.value = fullText.trim();
+          document.getElementById(countId).textContent = countWords(fullText) + ' words';
+        } catch (err) {
+          alert('Could not read PDF. Please paste text manually.');
+        }
+      };
+      reader.readAsArrayBuffer(file);
+
+    } else {
+      alert('PDF/DOC parsing not supported yet. Please paste text.');
+      this.value = '';
+    }
+  });
+}
+
+handleFileUpload('resume-file', 'resume-input', 'resume-count');
+handleFileUpload('jd-file',     'jd-input',     'jd-count');
+
 // ─── Scroll Animations ─────────────────────────────────────────────────────
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
