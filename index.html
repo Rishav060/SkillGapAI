@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skill Gap Analyzer</title>
+  <link rel="stylesheet" href="Style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- Background mesh -->
+  <div class="bg-mesh"></div>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <div class="app-wrapper">
+
+    <!-- HEADER -->
+    <header class="header">
+      <div class="header-inner">
+        <div class="logo">
+          <div class="logo-icon">
+            <i class="fa-solid fa-chart-network"></i>
+          </div>
+          <span class="logo-text">SkillGap<span class="logo-accent">AI</span></span>
+        </div>
+        <nav class="header-nav">
+          <span class="nav-badge"><i class="fa-solid fa-bolt"></i> AI-Powered</span>
+        </nav>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-tag"><i class="fa-regular fa-sparkles"></i> Career Intelligence Platform</div>
+      <h1 class="hero-title">Analyze Your Skills.<br /><span class="gradient-text">Bridge the Gap.</span></h1>
+      <p class="hero-sub">Paste your resume and a job description — our AI maps your strengths, surfaces missing skills, and builds you a personalized learning roadmap.</p>
+    </section>
+
+    <!-- INPUT SECTION -->
+    <section class="input-section">
+      <div class="input-grid">
+
+        <div class="input-card" id="resume-card">
+          <div class="input-card-header">
+            <div class="input-card-icon green">
+              <i class="fa-solid fa-file-user"></i>
+            </div>
+            <div>
+              <div class="input-card-label">Your Resume</div>
+              <div class="input-card-hint">Paste your full resume text</div>
+            </div>
+            <div class="char-count" id="resume-count">0 words</div>
+          </div>
+          <textarea
+            id="resume-input"
+            class="textarea"
+            placeholder="Paste your resume here...&#10;&#10;Example:&#10;Senior Software Engineer with 5 years of experience in React, Node.js, TypeScript, PostgreSQL, AWS, Docker, REST APIs, agile methodologies, team leadership..."
+            rows="12"
+          ></textarea>
+        </div>
+
+        <div class="input-card" id="jd-card">
+          <div class="input-card-header">
+            <div class="input-card-icon blue">
+              <i class="fa-solid fa-briefcase"></i>
+            </div>
+            <div>
+              <div class="input-card-label">Job Description</div>
+              <div class="input-card-hint">Paste the target job posting</div>
+            </div>
+            <div class="char-count" id="jd-count">0 words</div>
+          </div>
+          <textarea
+            id="jd-input"
+            class="textarea"
+            placeholder="Paste the job description here...&#10;&#10;Example:&#10;We are looking for a Full Stack Engineer with expertise in React, GraphQL, Kubernetes, Terraform, Python, machine learning basics, CI/CD pipelines, microservices architecture..."
+            rows="12"
+          ></textarea>
+        </div>
+
+      </div>
+
+      <div class="analyze-row">
+        <button class="analyze-btn" id="analyze-btn" onclick="analyzeSkills()">
+          <span class="btn-content">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Analyze My Skills</span>
+          </span>
+          <div class="btn-loader" id="btn-loader">
+            <div class="spinner"></div>
+            <span>Analyzing...</span>
+          </div>
+        </button>
+        <p class="analyze-hint"><i class="fa-solid fa-lock"></i> Your data is processed securely and never stored</p>
+      </div>
+    </section>
+
+    <!-- RESULTS SECTION -->
+    <section class="results-section" id="results-section">
+
+      <!-- Readiness Progress Bar -->
+      <div class="readiness-card" id="readiness-card">
+        <div class="readiness-header">
+          <div class="readiness-label">
+            <i class="fa-solid fa-bullseye-arrow"></i>
+            Job Readiness Score
+          </div>
+          <div class="readiness-percent" id="readiness-percent">0%</div>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+          <div class="progress-glow" id="progress-glow"></div>
+        </div>
+        <div class="readiness-meta" id="readiness-meta"></div>
+      </div>
+
+      <!-- Three Result Cards -->
+      <div class="results-grid">
+
+        <!-- Your Skills -->
+        <div class="result-card skills-card" id="skills-card">
+          <div class="result-card-header">
+            <div class="result-card-icon green-icon">
+              <i class="fa-solid fa-check-circle"></i>
+            </div>
+            <div>
+              <div class="result-card-title">Your Skills</div>
+              <div class="result-card-sub" id="skills-count">Matched from your resume</div>
+            </div>
+          </div>
+          <div class="skills-list" id="skills-list"></div>
+        </div>
+
+        <!-- Missing Skills -->
+        <div class="result-card missing-card" id="missing-card">
+          <div class="result-card-header">
+            <div class="result-card-icon red-icon">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+              <div class="result-card-title">Missing Skills</div>
+              <div class="result-card-sub" id="missing-count">Required but not in resume</div>
+            </div>
+          </div>
+          <div class="skills-list" id="missing-list"></div>
+        </div>
+
+        <!-- Roadmap -->
+        <div class="result-card roadmap-card" id="roadmap-card">
+          <div class="result-card-header">
+            <div class="result-card-icon blue-icon">
+              <i class="fa-solid fa-map-location-dot"></i>
+            </div>
+            <div>
+              <div class="result-card-title">Learning Roadmap</div>
+              <div class="result-card-sub">Personalized step-by-step plan</div>
+            </div>
+          </div>
+          <div class="roadmap-list" id="roadmap-list"></div>
+        </div>
+
+      </div>
+
+      <!-- Reset -->
+      <div class="reset-row">
+        <button class="reset-btn" onclick="resetAnalysis()">
+          <i class="fa-solid fa-rotate-left"></i> Start Over
+        </button>
+      </div>
+
+    </section>
+
+    <footer class="footer">
+      <p>SkillGapAI © 2026 · Team Innovators </p>
+    </footer>
+
+  </div>
+
+  <script src="Script.js"></script>
+</body>
+</html>
