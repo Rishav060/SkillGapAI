@@ -95,12 +95,10 @@ function analyzeSkills() {
       resource:    'YouTube / Official Documentation'
     }));
 
-    // "Your Skills" card always shows ALL skills found in the resume.
-    // matchedSkills is strictly the intersection — never padded with userSkills.
     renderResults({
-      matchedSkills: userSkills,   // displayed in "Your Skills" card
-      missingSkills,
-      matchedCount: matchedSkills.length,  // true intersection count for the meta bar
+      userSkills,        // ALL resume skills → "Your Skills" card
+      matchedSkills,     // intersection only → matched count in meta bar
+      missingSkills,     // job skills absent from resume → "Missing Skills" card
       readinessPercent,
       readinessSummary,
       roadmap
@@ -160,9 +158,10 @@ function renderResults(data) {
   // Readiness bar
   const pct = Math.min(100, Math.max(0, data.readinessPercent));
   document.getElementById('readiness-percent').textContent = pct + '%';
-  const intersectionCount = data.matchedCount !== undefined ? data.matchedCount : data.matchedSkills.length;
+  const intersectionCount = data.matchedSkills ? data.matchedSkills.length : 0;
+  const resumeSkills      = data.userSkills    || data.matchedSkills || [];
   document.getElementById('readiness-meta').innerHTML =
-    `<span><i class="fa-solid fa-circle-check" style="color:var(--green)"></i> ${data.matchedSkills.length} resume skills</span>
+    `<span><i class="fa-solid fa-circle-check" style="color:var(--green)"></i> ${resumeSkills.length} resume skills</span>
      <span><i class="fa-solid fa-bullseye" style="color:var(--blue-light)"></i> ${intersectionCount} matched to job</span>
      <span><i class="fa-solid fa-circle-xmark" style="color:var(--red)"></i> ${data.missingSkills.length} skills to learn</span>
      <span style="flex:1;text-align:right;font-style:italic;">${data.readinessSummary || ''}</span>`;
@@ -173,12 +172,12 @@ function renderResults(data) {
     document.getElementById('progress-glow').style.width = pct + '%';
   }, 200);
 
-  // Skill tags
-  renderSkillTags('skills-list', data.matchedSkills, 'tag-green', 'fa-check');
-  renderSkillTags('missing-list', data.missingSkills, 'tag-red', 'fa-xmark');
+  // Skill tags — "Your Skills" shows ALL resume skills; "Missing" shows gaps
+  renderSkillTags('skills-list', resumeSkills,       'tag-green', 'fa-check');
+  renderSkillTags('missing-list', data.missingSkills, 'tag-red',   'fa-xmark');
 
   document.getElementById('skills-count').textContent =
-    `${data.matchedSkills.length} skill${data.matchedSkills.length !== 1 ? 's' : ''} matched`;
+    `${resumeSkills.length} skill${resumeSkills.length !== 1 ? 's' : ''} found`;
   document.getElementById('missing-count').textContent =
     `${data.missingSkills.length} skill${data.missingSkills.length !== 1 ? 's' : ''} to acquire`;
 
