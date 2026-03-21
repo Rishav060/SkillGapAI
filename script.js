@@ -1,9 +1,4 @@
-/* ===========================
-   SKILL GAP ANALYZER — script.js
-   Real skill-matching logic (no external API)
-=========================== */
 
-// ─── Word Counter ──────────────────────────────────────────────────────────
 function countWords(text) {
   return text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
 }
@@ -15,7 +10,6 @@ document.getElementById('jd-input').addEventListener('input', function () {
   document.getElementById('jd-count').textContent = countWords(this.value) + ' words';
 });
 
-// ─── Predefined Skills Library ─────────────────────────────────────────────
 const SKILLS_LIST = [
   // Web fundamentals
   "html", "css", "bootstrap", "tailwind", "sass",
